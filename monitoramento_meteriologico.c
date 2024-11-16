@@ -1,23 +1,28 @@
-#include "data.h"
 #include "tempo.h"
-
-
-int anexarData(Tempo tempo) {
-  printf("Digite o dia, mês e ano, respectivamente:\n");
-  scanf(" %d %d %d", &tempo.dia, &tempo.mes,
-        &tempo.ano);
-  if(validarTempo(tempo) == 0) {
-    printf("Data inválida.\n");
-    return 0;
-  }else 
-    return 1;
-}
+#include <stdio.h>
 
 int main() {
   Tempo tempo;
-  int temp;
+  int i;
+  FILE *log;
+  log = fopen("registro.txt", "w");
+  // Inicializa o gerador de números aleatórios
+  srand(time(NULL));
   do {
-    temp = anexarData(tempo);
-  }while (temp == 0);
-  tempo.clima = definirClima();
+    printf("Escolha uma cidade:\n");
+    printf("Porto Alegre(1), Caxias do Sul(2), Pelotas(3), Santa Maria(4)\n");
+    scanf(" %d", &i);
+  } while (!definirCidade(&tempo, i));
+
+  do {
+    printf("Digite um mês do ano de 2024 (1 a 12):\n");
+    scanf(" %d", &tempo.mes);
+  } while (!validarData(&tempo));
+
+  fprintf(log, "*** REGISTRO METERIOLÓGICO DO MÊS %d DE 2024 EM %s ***\n\n",
+          tempo.mes, tempo.cidade);
+  for (i = 0; i <= tempo.dias; i++) {
+    fprintf(log, "Dia %d: %s\n", i, gerarClima());
+  }
+  fclose(log);
 }
