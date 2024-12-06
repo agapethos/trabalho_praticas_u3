@@ -24,6 +24,8 @@ void enviar_mensagens();
 
 int main()
 {
+    FILE *log;
+    log = fopen("registro.txt", "w");
     int escolha;
 
     do
@@ -39,7 +41,7 @@ int main()
         switch (escolha)
         {
         case 1:
-            verificar_previsao_tempo();
+            verificar_previsao_tempo(log);
             break;
         case 2:
             doar_para_vitimas();
@@ -54,7 +56,7 @@ int main()
             printf("Opção inválida. Tente novamente.\n");
         }
     } while (escolha != 4);
-
+    fclose(log);
     return 0;
 }
 
@@ -125,12 +127,10 @@ static const char *gerarClima()
 }
 
 // Função para verificar previsões e registrar
-int verificar_previsao_tempo()
+int verificar_previsao_tempo(FILE* log)
 {
     Tempo tempo;
     int opc;
-    FILE *log;
-    log = fopen("registro.txt", "a"); // Alterado para 'a' (append) para adicionar no arquivo sem sobrescrever
 
     // Inicializa o gerador de números aleatórios
     srand(time(NULL));
@@ -138,6 +138,7 @@ int verificar_previsao_tempo()
     // Loop principal para escolha da cidade
     do
     {
+        printf("\n\n*** Registrando previsão do tempo ***\n");
         printf("Escolha uma cidade:\n");
         printf("Porto Alegre(1), Caxias do Sul(2), Pelotas(3), Santa Maria(4)\n");
         scanf(" %d", &opc);
@@ -160,7 +161,6 @@ int verificar_previsao_tempo()
         if (strcmp(tempos_registrados[j].cidade, tempo.cidade) == 0 && tempos_registrados[j].mes == tempo.mes)
         {
             printf("Previsões do tempo já foram registradas para essa cidade e data.\n");
-            fclose(log);
             return 0;
         }
     }
@@ -174,9 +174,8 @@ int verificar_previsao_tempo()
     {
         fprintf(log, "Dia %d: %s\n", j, gerarClima());
     }
+    fprintf(log, "\n\n");
     printf("Previsões do tempo registradas no arquivo 'registro.txt'.\n");
-
-    fclose(log);
     return 1;
 }
 
@@ -186,7 +185,7 @@ void doar_para_vitimas()
     int opcao;
     do
     {
-        printf("\n========== Menu de Doações ==========\n");
+        printf("\n\n*** Menu de Doações ***\n");
         printf("1. Como doar dinheiro\n");
         printf("2. Como doar alimentos\n");
         printf("3. Como doar roupas e cobertores\n");
@@ -226,8 +225,7 @@ void doar_para_vitimas()
 void enviar_mensagens()
 {
     int tipo;
-    printf("\nEnviar mensagens de apoio\n");
-    printf("===============================\n");
+    printf("\n\n*** Enviar mensagens de apoio ***\n");
     printf("1. Para crianças\n");
     printf("2. Para jovens\n");
     printf("3. Para adultos\n");
